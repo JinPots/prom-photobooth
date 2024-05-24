@@ -1,0 +1,13 @@
+{
+  "name": "prom",
+  "module": "index.js",
+  "dependencies": {
+    "canvas": "^2.11.2",
+    "chokidar": "^3.6.0",
+    "ws": "^8.17.0"
+  },
+  "scripts": {
+    "dev": "nodemon index.js",
+    "start": "node index.js"
+  }
+}
