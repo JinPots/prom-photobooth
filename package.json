@@ -2,6 +2,7 @@
   "name": "prom",
   "module": "index.js",
   "dependencies": {
+    "@inquirer/prompts": "^5.0.4",
     "canvas": "^2.11.2",
     "chokidar": "^3.6.0",
     "ws": "^8.17.0"
