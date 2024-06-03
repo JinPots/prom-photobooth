@@ -83,6 +83,8 @@ async function main() {
     Type1Check()
     Type4Check()
     Type8Check()
+    Type16Check()
+    Type32Check()
     console.log("[MAIN] Started up Photobooth Image Processor at " + new Date().toLocaleString())
 }
 
