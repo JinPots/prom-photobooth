@@ -123,6 +123,20 @@ async function Type8Check() {
     })
 }
 
-
+async function Type16Check() {
+    var watcher = chokidar.watch(path.join(config.input, "16"), { ignored: /^\./, persistent: true });
+    let tempArray16 = []
+    watcher.on('add', function (pathToImg) {
+        tempArray16.push(path.join(pathToImg))
+        if (tempArray16.length == 4) { outputImage(tempArray16, 16); tempArray16 = [] }
+    })
+}async function Type32Check() {
+    var watcher = chokidar.watch(path.join(config.input, "32"), { ignored: /^\./, persistent: true });
+    let tempArray32 = []
+    watcher.on('add', function (pathToImg) {
+        tempArray32.push(path.join(pathToImg))
+        if (tempArray32.length == 4) { outputImage(tempArray32, 32); tempArray8 = [] }
+    })
+}
 
 main()
