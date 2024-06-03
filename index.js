@@ -4,11 +4,13 @@ const fs = require('fs')
 let queue = []
 var chokidar = require('chokidar');
 let config = require('./config.json')
+let folderChange = false
+
 
 async function outputImage(input, type) {
     let timeCurrent = new Date().toLocaleString()
     console.log(`[ImgP] Processing an image (TYPE: ${type}) at ${timeCurrent}`)
-    let outputPath
+    let outputPath, id = makeid(5)
     const canvas = createCanvas(2000, 1409)
     const ctx = canvas.getContext('2d')
     if (type != 1) {
@@ -30,11 +32,11 @@ async function outputImage(input, type) {
         }
         console.log(`[ImgP] Finished for ID ${temp1[temp1.length-1]}`)
 
-        let newPath = path.join(config.done, `${type}`, temp1[temp1.length - 1])
+        let newPath = path.join(config.done, `${type}`, `${temp1[temp1.length - 1]}_${id}`)
         fs.renameSync(currentPath, newPath)
-        outputPath = path.join(config.output, `${type}`, `ID${temp1[temp1.length-1]}(${new Date().getHours()}${new Date().getMinutes()}).jpg`)
+        outputPath = path.join(config.output, `${folderChange ? "2" : "1"}`, `${type}_${id}_ID${temp1[temp1.length-1]}(${new Date().getHours()}${new Date().getMinutes()}).jpg`)
     } else {
-        let tempPath2 = path.join(config.output, `${type}`, `ID_`)
+        let tempPath2 = path.join(config.output, `${folderChange ? "2" : "1"}`, `${type}_${id}_ID_`)
         const chunkSize = 4;
         let tempArray = []
         let a = "[ImgP] Processing an image (TYPE: 1) for 4 IDs: "
@@ -58,7 +60,7 @@ async function outputImage(input, type) {
             let currentPath = tempArray[i][0].split('\\').slice(0, -1).join('\\')
             let temp1 = currentPath.split('\\')
             temp1[temp1.length - 3] = "done"
-            let newPath = path.join(config.done, `${type}`, temp1[temp1.length - 1])
+            let newPath = path.join(config.done, `${type}`, `${temp1[temp1.length - 1]}_${id}`)
             fs.renameSync(currentPath, newPath)
             tempPath2 = `${tempPath2}${temp1[temp1.length - 1]}_`
         }
@@ -68,6 +70,7 @@ async function outputImage(input, type) {
     let backgroundImage = await loadImage(__dirname + "/bg.png")
     ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height)
 
+    folderChange = !folderChange
     const out = fs.createWriteStream(__dirname + '/test.jpg')
     const out2 = fs.createWriteStream(outputPath)
     const stream = canvas.createJPEGStream()
@@ -83,6 +86,17 @@ async function main() {
     console.log("[MAIN] Started up Photobooth Image Processor at " + new Date().toLocaleString())
 }
 
+function makeid(length) {
+    let result = '';
+    const characters = 'ABCDEFGHIJKLMNOPQRSTUVWXYZabcdefghijklmnopqrstuvwxyz0123456789';
+    const charactersLength = characters.length;
+    let counter = 0;
+    while (counter < length) {
+      result += characters.charAt(Math.floor(Math.random() * charactersLength));
+      counter += 1;
+    }
+    return result;
+}
 
 
 async function Type1Check() {
