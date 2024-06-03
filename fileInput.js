@@ -24,7 +24,9 @@ async function main() {
         choices: [
             { value: "1" },
             { value: "4" },
-            { value: "8" }
+            { value: "8" },
+            { value: "16" },
+            { value: "32" }
         ]
     })
 
