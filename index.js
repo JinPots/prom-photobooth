@@ -4,7 +4,6 @@ const fs = require('fs')
 let queue = []
 var chokidar = require('chokidar');
 let config = require('./config.json')
-let folderChange = false
 
 
 async function outputImage(input, type) {
@@ -34,9 +33,9 @@ async function outputImage(input, type) {
 
         let newPath = path.join(config.done, `${type}`, `${temp1[temp1.length - 1]}_${id}`)
         fs.renameSync(currentPath, newPath)
-        outputPath = path.join(config.output, `${folderChange ? "2" : "1"}`, `${type}_${id}_ID${temp1[temp1.length-1]}(${new Date().getHours()}${new Date().getMinutes()}).jpg`)
+        outputPath = path.join(config.output, `${type}_${id}_ID${temp1[temp1.length-1]}(${new Date().getHours()}${new Date().getMinutes()}).jpg`)
     } else {
-        let tempPath2 = path.join(config.output, `${folderChange ? "2" : "1"}`, `${type}_${id}_ID_`)
+        let tempPath2 = path.join(config.output, `${type}_${id}_ID_`)
         const chunkSize = 4;
         let tempArray = []
         let a = "[ImgP] Processing an image (TYPE: 1) for 4 IDs: "
@@ -71,20 +70,18 @@ async function outputImage(input, type) {
     ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height)
 
     folderChange = !folderChange
-    const out = fs.createWriteStream(__dirname + '/test.jpg')
+    // const out = fs.createWriteStream(__dirname + '/test.jpg')
     const out2 = fs.createWriteStream(outputPath)
     const stream = canvas.createJPEGStream()
-    stream.pipe(out)
+    // stream.pipe(out)
     stream.pipe(out2)
-    out.on('finish', () => console.log('[MAIN] An Image was created at time: ' + timeCurrent))
+    out2.on('finish', () => console.log('[MAIN] An Image was created at time: ' + timeCurrent))
 }
 
 async function main() {
     Type1Check()
     Type4Check()
     Type8Check()
-    Type16Check()
-    Type32Check()
     console.log("[MAIN] Started up Photobooth Image Processor at " + new Date().toLocaleString())
 }
 
@@ -125,20 +122,5 @@ async function Type8Check() {
     })
 }
 
-async function Type16Check() {
-    var watcher = chokidar.watch(path.join(config.input, "16"), { ignored: /^\./, persistent: true });
-    let tempArray16 = []
-    watcher.on('add', function (pathToImg) {
-        tempArray16.push(path.join(pathToImg))
-        if (tempArray16.length == 4) { outputImage(tempArray16, 16); tempArray16 = [] }
-    })
-}async function Type32Check() {
-    var watcher = chokidar.watch(path.join(config.input, "32"), { ignored: /^\./, persistent: true });
-    let tempArray32 = []
-    watcher.on('add', function (pathToImg) {
-        tempArray32.push(path.join(pathToImg))
-        if (tempArray32.length == 4) { outputImage(tempArray32, 32); tempArray8 = [] }
-    })
-}
 
 main()
