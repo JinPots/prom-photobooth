@@ -69,7 +69,6 @@ async function outputImage(input, type) {
     let backgroundImage = await loadImage(__dirname + "/bg.png")
     ctx.drawImage(backgroundImage, 0, 0, canvas.width, canvas.height)
 
-    folderChange = !folderChange
     // const out = fs.createWriteStream(__dirname + '/test.jpg')
     const out2 = fs.createWriteStream(outputPath)
     const stream = canvas.createJPEGStream()
