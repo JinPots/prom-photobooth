@@ -26,6 +26,7 @@ images/
 
 3. Change the path for folders in `config.json` file
 4. Run `npm install` to install required dependencies
+5. Use the `bg.png` to guide making a new background
 
 # How to use
 1. Do the [config guide](#how-to-config)
